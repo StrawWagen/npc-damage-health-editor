@@ -51,26 +51,34 @@ local npcWeights = {
     ["npc_breen"] = 90,
 }
 
-local function buffNPC( ent )
-    if IsValid( ent ) and ent:IsNPC() and npcWeights[ent:GetClass()] then
-        timer.Simple( 0, function()
-            if IsValid( ent ) and ent:IsNPC() then
-                local baseWeight = npcWeights[ent:GetClass()]
-                local hpMul = math.Round(ent:GetPhysicsObject():GetMass() / baseWeight, 3) 
-                local baseHP = ent:Health()
-                ent:SetHealth( baseHP * hpMul )
-                ent:SetMaxHealth( baseHP * hpMul )
-                
-                if IsValid( ent:CPPIGetOwner() ) and ent:IsNPC() and math.Round(hpMul, 1) != 1 then
-                    if ent:CPPIGetOwner():IsLineOfSightClear( ent ) then
-                        ent:CPPIGetOwner():ChatPrint( ent:GetClass() .. "'s HP multiplied by " .. math.Round(hpMul, 1) )
-                    end
-                end
-            end
-        end )
-    end
-end
 
+local function buffNPC( ent )
+    
+    if not IsValid ( ent ) then return end
+    if not ent:IsNPC() then return end
+    if not npcWeights[ent:GetClass()] then return end
+    
+    timer.Simple( 0, function()
+        if not IsValid ( ent ) then return end
+        if not IsValid( ent:GetPhysicsObject() ) then return end
+        
+        local baseWeight = npcWeights[ent:GetClass()]
+        local hpMul = math.Round(ent:GetPhysicsObject():GetMass() / baseWeight, 3) 
+        local baseHP = ent:Health()
+        
+        ent:SetHealth( baseHP * hpMul )
+        ent:SetMaxHealth( baseHP * hpMul )
+        
+        
+        if not IsValid( ent:CPPIGetOwner() ) then return end
+        if math.Round( hpMul, 1 ) == 1 then return end
+        if not ent:CPPIGetOwner():IsLineOfSightClear( ent ) then return end
+        
+        ent:CPPIGetOwner():ChatPrint( ent:GetClass() .. "'s HP multiplied by " .. math.Round( hpMul, 1 ) )
+        
+    end )
+end
+    
 hook.Remove( "OnEntityCreated", "BuffNPC" )
 hook.Add( "OnEntityCreated", "BuffNPC", buffNPC )
 
@@ -85,13 +93,11 @@ local function scaleNPCDamage( target, dmgInfo )
     if not defWeight then return end
     
     local phys = attacker:GetPhysicsObject()
-    if not phys then return end
+    if not IsValid( phys ) then return end
     
     local dmgMul = math.Round( phys:GetMass() / defWeight, 1 )
     dmgInfo:ScaleDamage( dmgMul )
 end
-
-
 
 hook.Remove( "EntityTakeDamage", "ScaleNPCDamage" )
 hook.Add( "EntityTakeDamage", "ScaleNPCDamage", scaleNPCDamage )
