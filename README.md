@@ -1,6 +1,6 @@
 # npc-damage-health-editor
 
-Allows you to edit the damage output and health of npcs in a way that should be compatible with most duplicators.
+Allows you to selectively edit the damage output and health of individual npcs in a way that should be compatible with most duplicators.
 
 Simply edit the weight of an npc, then copy and paste it, and the npc will be buffed!
 
