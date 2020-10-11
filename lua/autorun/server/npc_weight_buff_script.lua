@@ -69,16 +69,22 @@ local function buffNPC( ent )
         ent:SetHealth( baseHP * hpMul )
         ent:SetMaxHealth( baseHP * hpMul )
         
-        
-        if not IsValid( ent:CPPIGetOwner() ) then return end
-        if math.Round( hpMul, 1 ) == 1 then return end
-        if not ent:CPPIGetOwner():IsLineOfSightClear( ent ) then return end
-        
-        ent:CPPIGetOwner():ChatPrint( ent:GetClass() .. "'s HP multiplied by " .. math.Round( hpMul, 1 ) )
-        
+        if CPPI then
+            if not IsValid( ent:CPPIGetOwner() ) then return end
+            if math.Round( hpMul, 1 ) == 1 then return end
+            if not ent:CPPIGetOwner():IsLineOfSightClear( ent ) then return end
+            
+            ent:CPPIGetOwner():ChatPrint( ent:GetClass() .. "'s HP multiplied by " .. math.Round( hpMul, 1 ) )
+        else
+            if NPCDmgHpEditorMsgOverride then return end
+            for i, ply in ipairs( player.GetAll() ) do
+                ply:ChatPrint( "NPC Dmg & hp editor; no prop protection addon found, buff notification messages disabled for this session to avoid spamming errors." )
+            end
+            NPCDmgHpEditorMsgOverride = 1
+        end
     end )
 end
-    
+
 hook.Remove( "OnEntityCreated", "BuffNPC" )
 hook.Add( "OnEntityCreated", "BuffNPC", buffNPC )
 
