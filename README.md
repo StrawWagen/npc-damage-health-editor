@@ -9,7 +9,7 @@ So, say that you triple a zombies' weight, from 100 to 300, the damage output an
 
 this addon will only work consistently with default npcs.
 npcs sometimes won't gain their buffed HP if multiple npcs are spawned in a paste, so if you want to keep it safe, spawn only one buffed npc per paste.
-the HP buff notification message can be hidden by spawning the npc out of sight, behind some world geometry. (for singleplayer maps)
+the HP buff notification message can be hidden by spawning the npc out of sight. (for singleplayer maps)
 may be incompatible with other addons that change npc health and damage output (INPC)
 
 
