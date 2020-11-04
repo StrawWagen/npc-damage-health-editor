@@ -1,3 +1,4 @@
+
 local npcWeights = {
     ["npc_zombie"] = 100,
     ["npc_fastzombie"] = 95,
@@ -70,11 +71,20 @@ local function buffNPC( ent )
         ent:SetMaxHealth( baseHP * hpMul )
         
         if CPPI then
+		
             if not IsValid( ent:CPPIGetOwner() ) then return end
-            if math.Round( hpMul, 1 ) == 1 then return end
-            if not ent:CPPIGetOwner():IsLineOfSightClear( ent ) then return end
-            
-            ent:CPPIGetOwner():ChatPrint( ent:GetClass() .. "'s HP multiplied by " .. math.Round( hpMul, 1 ) )
+			if math.Round( hpMul, 1 ) == 1 then return end
+			
+			local entOwner = ent:CPPIGetOwner()
+			
+			-- creates trace between entity and it's owner, ends function if entity can see its owner
+            if util.TraceLine( { 
+			    start = entOwner:WorldSpaceCenter(),
+    			endpos = ent:WorldSpaceCenter(),
+				filter = entOwner 
+			} ).Entity ~= ent then return end
+			
+            entOwner:ChatPrint( ent:GetClass() .. "'s HP multiplied by " .. math.Round( hpMul, 1 ) )
         else
             if NPCDmgHpEditorMsgOverride then return end
             for i, ply in ipairs( player.GetAll() ) do
