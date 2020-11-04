@@ -69,7 +69,7 @@ local function buffNPC( ent )
         
         ent:SetHealth( baseHP * hpMul )
         ent:SetMaxHealth( baseHP * hpMul )
-        
+		    
         if CPPI then
 		
             if not IsValid( ent:CPPIGetOwner() ) then return end
